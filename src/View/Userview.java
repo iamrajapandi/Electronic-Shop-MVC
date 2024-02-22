@@ -24,12 +24,12 @@ public class Userview extends input {
                         System.out.println("    OTP is " + ord.getOTP());
                         System.out.println();
                 }
-                System.out.println("    1.To display the components");
-                System.out.println("   2.To Display the project...");
-                System.out.println("   3.Change Address!");
-                System.out.println("   4.View Orders------>>>>>");
-                System.out.println("   5.Delivered------>>>>>");
-                System.out.println("   6.Exit------>>>>>");
+                System.out.println("      1.To display the components");
+                System.out.println("      2.To Display the project...");
+                System.out.println("      3.Change Address!");
+                System.out.println("      4.View Orders------>>>>>");
+                System.out.println("      5.Delivered------>>>>>");
+                System.out.println("      6.Exit------>>>>>");
                 UserDAO u = UserDAO.getInstance();
                 User sent = new User();
                 u.enter(sent);
@@ -48,10 +48,7 @@ public class Userview extends input {
                 } else if (n == 4) {
                         Vieworders();
 
-                } else if (n == 5) {
-                        ConfirmAddress();
-
-                } else {
+                }  else {
 
                         return;
                 }
@@ -164,7 +161,10 @@ public class Userview extends input {
 
         public void Vieworders() throws Exception {
                         ordercheck o = new ordercheck();
+                        OrderAddressDAO ord=OrderAddressDAO.getInstance();
+
                         try {
+                                if(ord.deliverCheck()){
                             if (o.ProjectIsNull()) {
                                 List<List<String>> l = o.RetriewOrdersAll();
                                 System.out.printf(
@@ -209,6 +209,10 @@ public class Userview extends input {
                                         "---------------------------------------------------------------------------------------%n");
                             }
                 
+                        }
+                        else{
+                                System.out.println("No order found rigth noww...");
+                        }
                         } catch (Exception e) {
                 
                             System.out.print(e);

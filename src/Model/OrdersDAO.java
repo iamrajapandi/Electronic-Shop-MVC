@@ -29,16 +29,16 @@ public class OrdersDAO {
                 .prepareStatement("insert into orders (customer_id,component_id,Quantity,Order_date) values(?,?,?,?)");
         insertOrderId = con
                 .prepareStatement("select order_id from orders where customer_id=?&& p_id=?&&order_id!=?");
-                
+
         GetOrderID = con
                 .prepareStatement("select order_id from orders where customer_id=?&&component_id=?&&order_id!=?");
-       viewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  where user_Id=?");
+       viewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  where user_id=? and isDelivered not like('Yes')");
        AdminviewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  ");
        checkIsNull=con.prepareStatement("select * from orders where p_id Is not NULL and customer_id=?");
        checkIsNOTNull=con.prepareStatement("select * from orders where p_id Is NULL and customer_id=?");
        AdmincheckIsNull=con.prepareStatement("select * from orders where p_id Is not NULL ");
        AdmincheckIsNOTNull=con.prepareStatement("select * from orders where p_id Is NULL");
-       viewAllComponentOrders=con.prepareStatement( "select order_id, name, component_values, quantity, order_date,ph_no from orders inner join user on orders.customer_id = user.user_id inner join components_details on orders.component_id = components_details.component_id where user_id=?");
+       viewAllComponentOrders=con.prepareStatement( "select order_id, name, component_values, quantity, order_date,ph_no from orders inner join user on orders.customer_id = user.user_id inner join components_details on orders.component_id = components_details.component_id where user_id=? isDelivered not like('Yes')");
        AdminviewAllComponentOrders=con.prepareStatement("select order_id,name,component_name,Quantity,Order_date,ph_no from  Electronic_Components join orders using(component_id) join Customer_address using(order_id) join user using(user_id)");
     }
 

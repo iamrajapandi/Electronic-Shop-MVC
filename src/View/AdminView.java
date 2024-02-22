@@ -11,6 +11,7 @@ import Controller.ordercheck;
 import Model.ComponentsDAO;
 import Model.ProjectDAO;
 import Resourse.SalesCom;
+import Resourse.User;
 import Resourse.orders;
 import Resourse.project;
 import Util.input;
@@ -57,7 +58,7 @@ public class AdminView extends input {
         } else if (select == 8) {
             OTP();
 
-        } else if (select == 8) {
+        } else if (select == 9) {
             CheckOTP();
         } else {
             return;
@@ -260,12 +261,12 @@ public class AdminView extends input {
 
     
     public void CheckOTP() throws Exception {
-        System.out.println("   Enter the ORDER_ID");
+        System.out.println("   Enter the User_id");
         int or_id = sc.nextInt();
+        User.setId(or_id);
         System.out.println("   Enter the OTP From User");
         int OTP = sc.nextInt();
         orders.setOTP(OTP);
-        orders.setL(or_id);
         project.setISAvailabe("Yes");
         OTPCheck ot = new OTPCheck();
         orders od = new orders();
@@ -274,7 +275,7 @@ public class AdminView extends input {
     }
 
     public void OTP() throws Exception {
-        System.out.println("Enter the ORDER_ID");
+        System.out.println("Enter the User Id");
         int or_id = sc.nextInt();
         AdminCheck ad = new AdminCheck();
         ad.generateOTP(or_id);
