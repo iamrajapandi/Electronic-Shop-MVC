@@ -29,6 +29,7 @@ public class OrdersDAO {
                 .prepareStatement("insert into orders (customer_id,component_id,Quantity,Order_date) values(?,?,?,?)");
         insertOrderId = con
                 .prepareStatement("select order_id from orders where customer_id=?&& p_id=?&&order_id!=?");
+                
         GetOrderID = con
                 .prepareStatement("select order_id from orders where customer_id=?&&component_id=?&&order_id!=?");
        viewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  where user_Id=?");
