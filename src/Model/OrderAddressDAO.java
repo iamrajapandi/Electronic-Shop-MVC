@@ -26,7 +26,7 @@ public class OrderAddressDAO {
         addrressAdd = con.prepareStatement(
                 "insert into Customer_address(order_id,user_Id,address,isDelivered) values(?,?,?,?) ");
         otp = con.prepareStatement(
-                "update Customer_address set Bill_no= ? where user_Id=?");
+                "update Customer_address set Bill_no= ? where user_Id=? and order_id=?");
         id = con.prepareStatement("Select order_id from orders where customer_id=? and p_id= ?");
         delete = con.prepareStatement("delete from Customer_address where order_id=?");
         deleteNext = con.prepareStatement("delete from orders where order_id=?");
@@ -80,11 +80,12 @@ public class OrderAddressDAO {
         return 0;
     }
 
-    public void generateOTP(int orderId) throws Exception {
+    public void generateOTP(int orderId,int billid) throws Exception {
         Random random = new Random();
         int randomDigit = random.nextInt(1000);
         otp.setInt(1, randomDigit);
         otp.setInt(2, orderId);
+        otp.setInt(3,billid);
         otp.executeUpdate();
     }
 

@@ -10,7 +10,6 @@ import Util.input;
 import View.AdminView;
 import View.Userview;
 
-
 public class App extends input {
     public static Scanner sc = new Scanner(System.in);
 
@@ -33,9 +32,9 @@ public class App extends input {
             if (entry.equals("1")) {
                 sign_in();
             } else if (entry.equals("2")) {
-               
+
                 if (sign_up())
-                sign_in();
+                    sign_in();
             } else {
                 main(args);
             }
@@ -47,19 +46,20 @@ public class App extends input {
         }
 
     }
-    public static  boolean sign_up() throws Exception {
+
+    public static boolean sign_up() throws Exception {
 
         System.out.println("WELCOME TO SIGNUP");
         System.out.println("Enter Your Name");
         String name = sc.nextLine();
         // UserDAO use=UserDAO.getInstance();
-        UserCheck check=new UserCheck();
-        if ( check.ExistOrNot(name)) {
+        UserCheck check = new UserCheck();
+        if (check.ExistOrNot(name)) {
             System.out.println("UserName is already exist");
-          sign_up();
+            sign_up();
 
         }
-      
+
         System.out.println("Enter your Mail");
         String mail = sc.nextLine().toLowerCase();
         System.out.println("Enter your Password");
@@ -67,21 +67,20 @@ public class App extends input {
         System.out.println("Enter Your PhoneNumber");
         String ph_no = sc.nextLine();
         System.out.println("Enter your Address");
-        String address = sc.nextLine();            
-            User.setName(name);
-            User.setAddress(address);
-            User.setPass(pass);
-            User.setMail(mail);
-            User.setPh(ph_no);
-            User u=new User();
-            if(check.SIGNUP(u))
-            {
+        String address = sc.nextLine();
+        User.setName(name);
+        User.setAddress(address);
+        User.setPass(pass);
+        User.setMail(mail);
+        User.setPh(ph_no);
+        User u = new User();
+        if (check.SIGNUP(u)) {
 
-                System.out.println("Registered Successfully");
-                return true;
-                
-            }
-           return false;
+            System.out.println("Registered Successfully");
+            return true;
+
+        }
+        return false;
 
     }
 
@@ -100,18 +99,17 @@ public class App extends input {
                 if (d.ExistPass(pass)) {
                     User.setName(name);
                     User.setPass(pass);
-                    UserDAO dao=UserDAO.getInstance();
-                    User user=new User();
+                    UserDAO dao = UserDAO.getInstance();
+                    User user = new User();
                     dao.enter(user);
                     Userview u = new Userview();
                     System.out.printf("                Welcome " + User.getName() + "%n");
                     u.display();
-                  
-                }
-                else{
+
+                } else {
                     System.out.println("Invalid password....");
                     sign_in();
-                   
+
                 }
             }
             if (ad.ExistOrNot(name)) {
@@ -126,17 +124,14 @@ public class App extends input {
                     admin.display();
                     return;
 
-                }
-                else{
+                } else {
                     System.out.println("Invalid password....");
                     sign_in();
                 }
 
-            } 
-            else if(!ad.ExistOrNot(name)&&!d.ExistOrNot(name))
-            {
+            } else if (!ad.ExistOrNot(name) && !d.ExistOrNot(name)) {
                 System.out.println("UserName Not found");
-               sign_in();
+                sign_in();
             }
             return;
 

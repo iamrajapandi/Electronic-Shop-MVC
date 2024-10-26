@@ -3,6 +3,7 @@ package Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.ComponentsDAO;
 import Model.OrderAddressDAO;
 import Model.OrdersDAO;
 import Resourse.SalesCom;
@@ -111,7 +112,7 @@ public class ordercheck {
         
         try {
             OrdersDAO ad = OrdersDAO.getInstance();
-            return ad.projectIsNull();
+            return ad.projectIsNotNull();
         
         } catch (Exception e) {
            e.printStackTrace();
@@ -158,6 +159,18 @@ public class ordercheck {
 
     }
 
+    public void updateStockComponent()
+    {
+        try {
+            ComponentsDAO cs=ComponentsDAO.getInstance();
+            cs.updateStockCompo();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+    }
     public int BillCheck() throws Exception {
         OrderAddressDAO add = OrderAddressDAO.getInstance();
         return add.FindBill();

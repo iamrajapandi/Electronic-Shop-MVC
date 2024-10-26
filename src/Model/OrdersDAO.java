@@ -10,10 +10,10 @@ import Resourse.*;
 
 public class OrdersDAO {
     private static OrdersDAO instance;
-    PreparedStatement pr, check, checkstatus, date,checkIsNull,checkIsNOTNull;
-    PreparedStatement insertOrder, Orderdetails, insertOrderId,insertIntoOrders,GetOrderID;
-    PreparedStatement  viewAllOrder,viewAllComponentOrders, AdmincheckIsNull,AdmincheckIsNOTNull,
-    AdminviewAllComponentOrders, AdminviewAllOrder;
+    PreparedStatement pr, check, checkstatus, date, checkIsNull, checkIsNOTNull;
+    PreparedStatement insertOrder, Orderdetails, insertOrderId, insertIntoOrders, GetOrderID;
+    PreparedStatement viewAllOrder, viewAllComponentOrders, AdmincheckIsNull, AdmincheckIsNOTNull,
+            AdminviewAllComponentOrders, AdminviewAllOrder;
 
     private OrdersDAO() throws Exception {
         Connection con = DbConneticon.getConnection();
@@ -32,14 +32,18 @@ public class OrdersDAO {
 
         GetOrderID = con
                 .prepareStatement("select order_id from orders where customer_id=?&&component_id=?&&order_id!=?");
-       viewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  where user_id=? and isDelivered not like('Yes')");
-       AdminviewAllOrder=con.prepareStatement("select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  ");
-       checkIsNull=con.prepareStatement("select * from orders where p_id Is not NULL and customer_id=?");
-       checkIsNOTNull=con.prepareStatement("select * from orders where p_id Is NULL and customer_id=?");
-       AdmincheckIsNull=con.prepareStatement("select * from orders where p_id Is not NULL ");
-       AdmincheckIsNOTNull=con.prepareStatement("select * from orders where p_id Is NULL");
-       viewAllComponentOrders=con.prepareStatement( "select order_id, name, component_values, quantity, order_date,ph_no from orders inner join user on orders.customer_id = user.user_id inner join components_details on orders.component_id = components_details.component_id where user_id=? isDelivered not like('Yes')");
-       AdminviewAllComponentOrders=con.prepareStatement("select order_id,name,component_name,Quantity,Order_date,ph_no from  Electronic_Components join orders using(component_id) join Customer_address using(order_id) join user using(user_id)");
+        viewAllOrder = con.prepareStatement(
+                "select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  where user_id=? and   isDelivered not like('Yes')");
+        AdminviewAllOrder = con.prepareStatement(
+                "select order_id,name,p_name,Quantity,Order_date,ph_no from project join orders using(p_id) join Customer_address using(order_id) join user using (user_id)  ");
+        checkIsNull = con.prepareStatement("select * from orders where p_id Is NULL and customer_id=?");
+        checkIsNOTNull = con.prepareStatement("select * from orders where p_id Is NULL and customer_id=?");
+        AdmincheckIsNull = con.prepareStatement("select * from orders where p_id Is not NULL ");
+        AdmincheckIsNOTNull = con.prepareStatement("select * from orders where p_id Is NULL");
+        viewAllComponentOrders = con.prepareStatement(
+                "select order_id, name, component_values, quantity, order_date,ph_no from components_details inner join orders on orders.component_id=components_details.componentValueId  join Customer_address using(order_id) join user using (user_id) where customer_id=? and order_id=?");
+        AdminviewAllComponentOrders = con.prepareStatement(
+                "select order_id,name,component_name,Quantity,Order_date,ph_no from  Electronic_Components join orders using(component_id) join Customer_address using(order_id) join user using(user_id)");
     }
 
     public static OrdersDAO getInstance() throws Exception {
@@ -122,6 +126,7 @@ public class OrdersDAO {
         return id;
 
     }
+
     public int insertIntorder(SalesCom ord, int tot) throws Exception {
         String date = CurrentDate();
         java.sql.Date sqlDate = java.sql.Date.valueOf(date);
@@ -131,11 +136,11 @@ public class OrdersDAO {
         insertIntoOrders.setDate(4, sqlDate);
         insertIntoOrders.executeUpdate();
 
-        orders od=new orders();
+        orders od = new orders();
         GetOrderID.setInt(1, User.getId());
         GetOrderID.setInt(2, ord.getCompid());
-        GetOrderID.setInt(3,od.getL());
-        ResultSet rs =  GetOrderID.executeQuery();
+        GetOrderID.setInt(3, od.getL());
+        ResultSet rs = GetOrderID.executeQuery();
         int id = 0;
         while (rs.next()) {
             id = rs.getInt(1);
@@ -165,15 +170,14 @@ public class OrdersDAO {
         }
         return l;
     }
-    public List<List<String>>  viewAllList() 
-    {
-        List<List<String>>l=new ArrayList<>();
+
+    public List<List<String>> viewAllList() {
+        List<List<String>> l = new ArrayList<>();
         try {
-            viewAllOrder.setInt(1,User.getId());
-            ResultSet rs=viewAllOrder.executeQuery();
-            while(rs.next())
-            {
-                List<String>l1=new ArrayList<>();
+            viewAllOrder.setInt(1, User.getId());
+            ResultSet rs = viewAllOrder.executeQuery();
+            while (rs.next()) {
+                List<String> l1 = new ArrayList<>();
                 l1.add(String.valueOf(rs.getInt(1)));
                 l1.add(rs.getString(2));
                 l1.add(rs.getString(3));
@@ -183,21 +187,20 @@ public class OrdersDAO {
                 l.add(l1);
             }
         } catch (SQLException e) {
-          
+
             e.printStackTrace();
         }
-        
+
         return l;
 
     }
-    public List<List<String>>  AdminviewAllList() 
-    {
-        List<List<String>>l=new ArrayList<>();
+
+    public List<List<String>> AdminviewAllList() {
+        List<List<String>> l = new ArrayList<>();
         try {
-            ResultSet rs=AdminviewAllOrder.executeQuery();
-            while(rs.next())
-            {
-                List<String>l1=new ArrayList<>();
+            ResultSet rs = AdminviewAllOrder.executeQuery();
+            while (rs.next()) {
+                List<String> l1 = new ArrayList<>();
                 l1.add(String.valueOf(rs.getInt(1)));
                 l1.add(rs.getString(2));
                 l1.add(rs.getString(3));
@@ -207,22 +210,28 @@ public class OrdersDAO {
                 l.add(l1);
             }
         } catch (SQLException e) {
-          
+
             e.printStackTrace();
         }
-        
+
         return l;
 
     }
-    public List<List<String>>  viewAllComponentOrders() 
-    {
-        List<List<String>>l=new ArrayList<>();
+
+    public void updateStockCompo() {
+
+    }
+
+    public List<List<String>> viewAllComponentOrders() {
+
+        List<List<String>> l = new ArrayList<>();
         try {
-            viewAllComponentOrders.setInt(1,User.getId() );
-            ResultSet rs=viewAllComponentOrders.executeQuery();
-            while(rs.next())
-            {
-                List<String>l1=new ArrayList<>();
+            orders s = new orders();
+            viewAllComponentOrders.setInt(1, User.getId());
+            viewAllComponentOrders.setInt(2, s.getL());
+            ResultSet rs = viewAllComponentOrders.executeQuery();
+            while (rs.next()) {
+                List<String> l1 = new ArrayList<>();
                 l1.add(String.valueOf(rs.getInt(1)));
                 l1.add(rs.getString(2));
                 l1.add(rs.getString(3));
@@ -232,22 +241,21 @@ public class OrdersDAO {
                 l.add(l1);
             }
         } catch (SQLException e) {
-          
+
             e.printStackTrace();
         }
-        
+
         return l;
 
     }
-    public List<List<String>>  AdminviewAllComponentOrders() 
-    {
-        List<List<String>>l=new ArrayList<>();
+
+    public List<List<String>> AdminviewAllComponentOrders() {
+        List<List<String>> l = new ArrayList<>();
         try {
-           
-            ResultSet rs=AdminviewAllComponentOrders.executeQuery();
-            while(rs.next())
-            {
-                List<String>l1=new ArrayList<>();
+
+            ResultSet rs = AdminviewAllComponentOrders.executeQuery();
+            while (rs.next()) {
+                List<String> l1 = new ArrayList<>();
                 l1.add(String.valueOf(rs.getInt(1)));
                 l1.add(rs.getString(2));
                 l1.add(rs.getString(3));
@@ -257,62 +265,61 @@ public class OrdersDAO {
                 l.add(l1);
             }
         } catch (SQLException e) {
-          
+
             e.printStackTrace();
         }
-        
+
         return l;
 
     }
 
-    public boolean projectIsNull()
-    {
+    public boolean projectIsNull() {
         try {
-            checkIsNull.setInt(1,User.getId());
-            ResultSet rs=checkIsNull.executeQuery();
-            if(rs.next())
-            return true;
+            checkIsNull.setInt(1, User.getId());
+            ResultSet rs = checkIsNull.executeQuery();
+            if (rs.next())
+                return true;
         } catch (SQLException e) {
-        
+
             e.printStackTrace();
         }
         return false;
     }
-    public boolean projectIsNotNull()
-    {
+
+    public boolean projectIsNotNull() {
         try {
-            checkIsNOTNull.setInt(1,User.getId());
-            ResultSet rs=checkIsNOTNull.executeQuery();
-            if(rs.next())
-            return true;
+            checkIsNOTNull.setInt(1, User.getId());
+            ResultSet rs = checkIsNOTNull.executeQuery();
+            if (rs.next())
+                return true;
         } catch (SQLException e) {
-        
+
             e.printStackTrace();
         }
         return false;
     }
-    public boolean AdminprojectIsNull()
-    {
+
+    public boolean AdminprojectIsNull() {
         try {
-           
-            ResultSet rs=AdmincheckIsNull.executeQuery();
-            if(rs.next())
-            return true;
+
+            ResultSet rs = AdmincheckIsNull.executeQuery();
+            if (rs.next())
+                return true;
         } catch (SQLException e) {
-        
+
             e.printStackTrace();
         }
         return false;
     }
-    public boolean AdminprojectIsNotNull()
-    {
+
+    public boolean AdminprojectIsNotNull() {
         try {
-           
-            ResultSet rs=AdmincheckIsNOTNull.executeQuery();
-            if(rs.next())
-            return true;
+
+            ResultSet rs = AdmincheckIsNOTNull.executeQuery();
+            if (rs.next())
+                return true;
         } catch (SQLException e) {
-        
+
             e.printStackTrace();
         }
         return false;

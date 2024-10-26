@@ -39,6 +39,17 @@ public class ComponentCheck {
         List<List<String>>l=comp.ViewComponentList();  
         return l;
     }
+    public int AvailCom()
+    {
+        try {
+            ComponentsDAO c=ComponentsDAO.getInstance();
+            return c.getAvailable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return 1;
+    }
     public List<List<String>> SalesComponentList( )
     {
         List<List<String>>list=new ArrayList<>();

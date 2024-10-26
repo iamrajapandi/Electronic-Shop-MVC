@@ -28,6 +28,10 @@ public class User {
     }
 
     public static void setPass(String pass) {
+        if(pass.length()<4){
+            System.out.println("Invalid ....pls try again ....");
+            return;
+        }
         password = pass;
     }
 

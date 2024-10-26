@@ -19,7 +19,7 @@ public class ProjectDAO extends DbConneticon {
 
     private ProjectDAO() throws Exception {
         Connection con=DbConneticon.getConnection();
-        projInsert = con.prepareStatement("insert into project(p_name,more_details,AvailableStock,price) values(?,?,?,?)");
+        projInsert = con.prepareStatement("insert into project(p_name,more_details,AvailableStock) values(?,?,?)");
         insertcomponents = con
                 .prepareStatement("insert into components(p_id,c_name,c_value,quantity,price) values(?,?,?,?,?)");
         insertC_model = con.prepareStatement("insert into c_model values(?,?,?,?)");
@@ -84,11 +84,10 @@ public int Available(orders od) throws Exception{
         return 0;
     }
 
-    public int insert(String proj, String link, int Available,int price) throws Exception {
+    public int insert(String proj, String link, int Available) throws Exception {
         projInsert.setString(1, proj);
         projInsert.setString(2, link);
         projInsert.setInt(3, Available);
-        projInsert.setInt(4,price);
         projInsert.executeUpdate();
         projId.setString(1, proj);
         ResultSet rs = projId.executeQuery();

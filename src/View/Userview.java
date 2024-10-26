@@ -48,7 +48,7 @@ public class Userview extends input {
                 } else if (n == 4) {
                         Vieworders();
 
-                }  else {
+                } else {
 
                         return;
                 }
@@ -89,6 +89,7 @@ public class Userview extends input {
                 ProjectCheck c = new ProjectCheck();
                 project.setAvailable(existStock - tot);
                 c.updateStock(stock);
+                sc.nextLine();
 
                 System.out.println("press enter for okk");
                 System.out.println(" Enter '1' for edit addres");
@@ -113,13 +114,29 @@ public class Userview extends input {
 
                 SalesCom od = new SalesCom();
                 ElectCompCheck checkPrice = new ElectCompCheck();
+                ComponentCheck c = new ComponentCheck();
                 checkPrice.FindId(od);
                 ordercheck oc = new ordercheck();
+               
+                
+                int av = c.AvailCom();
+                System.out.println("Available Quantity  ==>  " + av);
+                System.out.println("Enter the total Quantity ");
+                int tot_q = sc.nextInt();
                 sc.nextLine();
-                System.out.println("Enter the total Quantity");
-                int tot = sc.nextInt();
-                sc.nextLine();
-                oc.InsertOrderComp(od, tot);
+                if (tot_q > av) {
+                        System.out.println("Only available quantity is" + av);
+                        BuyComponents();
+                }
+                else{
+                        oc.InsertOrderComp(od, tot_q);
+
+                        int minus=av-tot_q;
+                SalesCom.setAvailableStock(minus);
+                System.out.println(minus);
+                oc.updateStockComponent();
+
+                oc.updateStockComponent();
                 System.out.println("1..Add More");
                 String more = sc.nextLine();
                 if (more.equals("")) {
@@ -127,9 +144,21 @@ public class Userview extends input {
                         OrderviewFull();
 
                 } else {
+                        System.out.println("1..Order project");
+                        System.out.println("2...Order Components");
+                        int preference=sc.nextInt();
+                        if(preference==2)
                         UserViewcomponentsList();
+                        else{
+                                try {
+                                        project();
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                }
+                        }
 
                 }
+        }
 
         }
 
@@ -146,7 +175,6 @@ public class Userview extends input {
 
                 }
                 System.out.printf("-------------------------------------------------------%n");
-                // ComponentsView view=new ComponentsView();
                 Components_View();
         }
 
@@ -160,65 +188,68 @@ public class Userview extends input {
         }
 
         public void Vieworders() throws Exception {
-                        ordercheck o = new ordercheck();
-                        OrderAddressDAO ord=OrderAddressDAO.getInstance();
+                ordercheck o = new ordercheck();
+                OrderAddressDAO ord = OrderAddressDAO.getInstance();
 
-                        try {
-                                if(ord.deliverCheck()){
-                            if (o.ProjectIsNull()) {
-                                List<List<String>> l = o.RetriewOrdersAll();
-                                System.out.printf(
-                                        "---------------------------------------------------------------------------------------%n");
-                                System.out.printf(
-                                        "|  %-5s |  %-10s | %-23s | %6s| %-6s | %-6s |%n",
-                                        "Order_id", "name", "p_name", "Quantity", "OrderDate",
-                                        "PhoneNumber");
-                                for (int i = 0; i < l.size(); i++) {
-                                    System.out.printf(
-                                            "---------------------------------------------------------------------------------------%n");
-                
-                                    System.out.printf(
-                                            "|  %-6s |  %-10s | %-25s | %6s| %-6s | %-6s |%n", l.get(i).get(0), l.get(i).get(1),
-                                            l.get(i).get(2), l.get(i).get(3), l.get(i).get(4),
-                                            l.get(i).get(5));
+                try {
+                        if (ord.deliverCheck()) {
+                                if (!o.ProjectIsNull()) {
+                                        List<List<String>> l = o.RetriewOrdersAll();
+                                        if(l.size()!=0){
+                                        System.out.printf(
+                                                        "---------------------------------------------------------------------------------------%n");
+                                        System.out.printf(
+                                                        "|  %-5s |  %-10s | %-23s | %6s| %-6s | %-6s |%n",
+                                                        "Order_id", "name", "p_name", "Quantity", "OrderDate",
+                                                        "PhoneNumber");
+                                        for (int i = 0; i < l.size(); i++) {
+                                                System.out.printf(
+                                                                "---------------------------------------------------------------------------------------%n");
+
+                                                System.out.printf(
+                                                                "|  %-6s |  %-10s | %-25s | %6s| %-6s | %-6s |%n",
+                                                                l.get(i).get(0), l.get(i).get(1),
+                                                                l.get(i).get(2), l.get(i).get(3), l.get(i).get(4),
+                                                                l.get(i).get(5));
+                                        }
+
+                                        System.out.printf(
+                                                        "---------------------------------------------------------------------------------------%n");
                                 }
-                
-                                System.out.printf(
-                                        "---------------------------------------------------------------------------------------%n");
-                            }
-                
-                            if (!o.ProjectIsNotNull()) {
-                                List<List<String>> l = o.RetriewCompOrder();
-                                System.out.printf(
-                                        "---------------------------------------------------------------------------------------%n");
-                                System.out.printf(
-                                        "|  %-5s |  %-10s | %-23s | %6s| %-6s | %-6s |%n",
-                                        "Order_id", "name", "p_name", "Quantity", "OrderDate",
-                                        "PhoneNumber");
-                                for (int i = 0; i < l.size(); i++) {
-                                    System.out.printf(
-                                            "---------------------------------------------------------------------------------------%n");
-                
-                                    System.out.printf(
-                                            "|  %-6s |  %-10s | %-25s | %6s| %-6s | %-6s |%n", l.get(i).get(0), l.get(i).get(1),
-                                            l.get(i).get(2), l.get(i).get(3), l.get(i).get(4),
-                                            l.get(i).get(5));
-                                }
-                
-                                System.out.printf(
-                                        "---------------------------------------------------------------------------------------%n");
-                            }
-                
                         }
-                        else{
+
+                                if (o.ProjectIsNotNull()) {
+                                        List<List<String>> l = o.RetriewCompOrder();
+                                        if(l.size()!=0){
+                                        System.out.printf(
+                                                        "---------------------------------------------------------------------------------------%n");
+                                        System.out.printf(
+                                                        "|  %-5s |  %-10s | %-23s | %6s| %-6s | %-6s |%n",
+                                                        "Order_id", "name", "p_name", "Quantity", "OrderDate",
+                                                        "PhoneNumber");
+                                        for (int i = 0; i < l.size(); i++) {
+                                                System.out.printf(
+                                                                "---------------------------------------------------------------------------------------%n");
+
+                                                System.out.printf(
+                                                                "|  %-6s |  %-10s | %-25s | %6s| %-6s | %-6s |%n",
+                                                                l.get(i).get(0), l.get(i).get(1),
+                                                                l.get(i).get(2), l.get(i).get(3), l.get(i).get(4),
+                                                                l.get(i).get(5));
+                                        }
+
+                                        System.out.printf(
+                                                        "---------------------------------------------------------------------------------------%n");
+                                }
+                        }
+
+                        } else {
                                 System.out.println("No order found rigth noww...");
                         }
-                        } catch (Exception e) {
-                
-                            System.out.print(e);
-                        }
-                
-                    
+                } catch (Exception e) {
+
+                        System.out.print(e);
+                }
 
         }
 
@@ -242,18 +273,18 @@ public class Userview extends input {
                 System.out.printf(
                                 "--------------------------------------------------------------------------------------------------%n");
                 System.out.printf(
-                                "|  %-4s |  %-8s | %-8s | %6s| %-6s | %-6s | %-5s | %-10s |%n",
-                                "c_id", "c_name", "c_value", "Quantity", "price",
+                                "|  %-4s |  %-8s | %-8s | %6s| %-6s | %-5s | %-10s |%n",
+                                "c_id", "c_name", "c_value", "Quantity",
                                 "Brand", "Organisation",
                                 "Model");
                 for (int i = 0; i < l.size(); i++) {
                         System.out.printf(
                                         "--------------------------------------------------------------------------------------------------%n");
                         System.out.printf(
-                                        "|   %-4s | %-8s | %-8s | %6s| %-6s | %-6s | %-5s | %-10s |%n",
+                                        "|   %-4s | %-8s | %-8s | %6s|  %-6s | %-5s | %-10s |%n",
                                         l.get(i).get(0), l.get(i).get(1), l.get(i).get(2), l.get(i).get(3),
                                         l.get(i).get(4),
-                                        l.get(i).get(5), l.get(i).get(6), l.get(i).get(7));
+                                        l.get(i).get(5), l.get(i).get(6));
                 }
 
         }
@@ -306,6 +337,7 @@ public class Userview extends input {
                                 System.out.printf(
                                                 "---------------------------------------------------------------------------------------%n");
                         }
+                        return;
 
                 } catch (Exception e) {
 
@@ -324,20 +356,20 @@ public class Userview extends input {
                 ComponentsDAO c = ComponentsDAO.getInstance();
                 List<List<String>> l = c.view();
                 System.out.printf(
-                                "---------------------------------------------------------------------------------------------------------------%n");
-                System.out.printf("| %-4s|  %-15s | %-8s|   %-10s | %-8s | %8s | %-13s | %-15s |%n", "c_id",
-                                "c_name", "c_value", "Quantity", "price", "Brand_name", "Organisation", "ModeNumber");
+                                "----------------------------------------------------------------------------------------------------%n");
+                System.out.printf("| %-4s|  %-15s | %-8s|   %-10s | %8s | %-13s | %-15s |%n", "c_id",
+                                "c_name", "c_value", "Quantity", "Brand_name", "Organisation", "ModeNumber");
                 for (int i = 0; i < l.size(); i++) {
                         System.out.printf(
-                                        "---------------------------------------------------------------------------------------------------------------%n");
-                        System.out.printf("| %-4s |  %-15s | %-8s|   %-10s | %-8s | %10s | %-13s | %-15s |%n",
+                                        "----------------------------------------------------------------------------------------------------%n");
+                        System.out.printf("| %-4s |  %-15s | %-8s|   %-10s | %10s | %-13s | %-15s |%n",
                                         l.get(i).get(0),
                                         l.get(i).get(1), l.get(i).get(2), l.get(i).get(3), l.get(i).get(4),
                                         l.get(i).get(5),
-                                        l.get(i).get(6), l.get(i).get(7));
+                                        l.get(i).get(6));
                 }
                 System.out.printf(
-                                "---------------------------------------------------------------------------------------------------------------%n");
+                                "----------------------------------------------------------------------------------------------------%n");
                 System.out.println("1.Buy");
                 System.out.println("2.Back");
                 int select = sc.nextInt();

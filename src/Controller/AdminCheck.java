@@ -33,8 +33,8 @@ public class AdminCheck {
         return false;
 
     }
-public void generateOTP(int otp) throws Exception{
+public void generateOTP(int usr,int otp) throws Exception{
     OrderAddressDAO o=OrderAddressDAO.getInstance();
-    o.generateOTP(otp);
+    o.generateOTP(otp,usr);
 }
 }

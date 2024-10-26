@@ -24,7 +24,7 @@ public class AdminView extends input {
         System.out.printf("****************************************************************************************%n");
         System.out.printf("****************************************************************************************%n");
         System.out.printf("                             Enter 1 for insert Components:%n");
-        System.out.printf("                             Enter 2 for insert:%n");
+        System.out.printf("                             Enter 2 for insert project:%n");
         System.out.printf("                             3 for view: %n");
         System.out.printf("                             4 for delete: %n");
         System.out.printf("                             5 for view orders: %n");
@@ -151,11 +151,9 @@ public class AdminView extends input {
             String link = sc.nextLine();
             System.out.println("Enter the Available stock");
             Available = sc.nextInt();
-            System.out.println("Enter the Price");
-            int price = sc.nextInt();
             sc.nextLine();
             ProjectDAO d = ProjectDAO.getInstance();
-            int id = d.insert(proj, link, Available, price);
+            int id = d.insert(proj, link, Available);
             addComponents(proj, id, link);
         }
     }
@@ -276,9 +274,11 @@ public class AdminView extends input {
 
     public void OTP() throws Exception {
         System.out.println("Enter the User Id");
-        int or_id = sc.nextInt();
+        int usr_id = sc.nextInt();
+        System.out.println("enter order Id");
+        int or_id=sc.nextInt();
         AdminCheck ad = new AdminCheck();
-        ad.generateOTP(or_id);
+        ad.generateOTP(usr_id,or_id);
 
     }
 

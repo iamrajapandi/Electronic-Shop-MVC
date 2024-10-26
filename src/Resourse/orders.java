@@ -1,7 +1,7 @@
 package Resourse;
 
 
-public class orders {
+public class orders{
 
     private static int viewComponent=0;
     private static int id=0;
